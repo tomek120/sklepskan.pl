@@ -56,9 +56,9 @@ Podaj domenę, np. `example.com`, albo pełny adres strony. Klucze API nie są p
 
 ## Plan rozwoju
 
--Ujednolicić format wyników kontroli i obsługę błędów.
--Dodać testy automatyczne parserów i walidacji.
--Sprawdzać znalezione dane firmy w zewnętrznych rejestrach.
--Opracować ocenę ryzyka z uzasadnieniem i rozróżnieniem braku danych od ostrzeżeń.
--Zbudować backend i interfejs strony z formularzem adresu sklepu oraz raportem.
--Wdrożyć serwis po dodaniu ochrony przed SSRF i limitów zapytań.
+- Ujednolicić format wyników kontroli i obsługę błędów.
+- Dodać testy automatyczne parserów i walidacji.
+- Sprawdzać znalezione dane firmy w zewnętrznych rejestrach.
+- Opracować ocenę ryzyka z uzasadnieniem i rozróżnieniem braku danych od ostrzeżeń.
+- Zbudować backend i interfejs strony z formularzem adresu sklepu oraz raportem.
+- Wdrożyć serwis po dodaniu ochrony przed SSRF i limitów zapytań.
