@@ -1,25 +1,36 @@
 # SklepRadar
 
-SklepRadar to projekt strony internetowej, która ma pomagać kupującym oceniać ryzyko zakupów w sklepach online na podstawie publicznie dostępnych informacji (OSINT). Użytkownik poda adres sklepu, a serwis przedstawi raport z wykrytymi sygnałami ryzyka, źródłami i wyjaśnieniami.
+Projekt strony internetowej pomagającej sprawdzać sklepy online na podstawie publicznych informacji (OSINT). Docelowo użytkownik poda adres sklepu i otrzyma raport z wynikami, źródłami oraz wyjaśnieniami.
 
 Projekt rozwijany jako portfolio z zakresu Pythona i cyberbezpieczeństwa.
 
-**Obecny etap:** prototyp mechanizmu analizy w Pythonie, uruchamiany w terminalu. Interfejs internetowy i ocena ryzyka są planowane; obecna wersja zbiera dane i wyświetla wyniki kontroli.
+**Obecny etap:** działający prototyp w terminalu. Mechanizm analizy zwraca uporządkowany raport niezależnie od sposobu wyświetlania. Interfejs internetowy jest kolejnym etapem.
 
-## Działające funkcje
+## Funkcje
 
-- Wiek domeny na podstawie danych RDAP.
-- Weryfikacja certyfikatu TLS oraz odczyt jego wystawcy i wieku.
-- Wykrywanie rekordów MX, SPF i DMARC.
-- Wyszukiwanie linków do regulaminu, prywatności, zwrotów, kontaktu, reklamacji oraz dostawy i płatności.
-- Wyszukiwanie NIP-u na wskazanej stronie i maksymalnie czterech podstronach dotyczących firmy.
-- Sprawdzanie sumy kontrolnej NIP-u i wyświetlanie adresów źródeł.
+- Odczyt wieku domeny z RDAP i weryfikacja certyfikatu TLS.
+- Wykrywanie rekordów pocztowych MX, SPF i DMARC.
+- Wyszukiwanie linków do informacji o sklepie i wybór podstron do analizy.
+- Wykrywanie wielu polskich NIP-ów, kontrola ich sumy kontrolnej i sprawdzanie danych firm w wykazie VAT Ministerstwa Finansów.
+- Rozpoznawanie deklarowanej roli firmy, np. sprzedawcy lub operatora płatności, na podstawie kontekstu.
+- Wykrywanie niemieckich numerów VAT ID — bez weryfikacji rejestrowej.
+- Raport ze źródłami, tryb szczegółowy i zapis do JSON.
 
-**Technologie:** Python, requests, BeautifulSoup, dnspython.
+**Technologie:** Python 3.10+, BeautifulSoup, dnspython, tldextract, certifi. Zależności znajdują się w `requirements.txt`.
 
-## Uruchomienie prototypu lokalnie
+## Struktura projektu
 
-Wymagania: Python 3 i dostęp do internetu. W folderze z `main.py` utwórz środowisko:
+| Plik | Zadanie |
+| --- | --- |
+| `main.py` | Obsługa konsoli i wyświetlanie wyników |
+| `scanner.py` | Wybór podstron, koordynacja analizy i raport |
+| `network.py` | Połączenia HTTP, TLS, DNS i RDAP |
+| `company.py` | Wykrywanie identyfikatorów, dane VAT i role firm |
+| `test_main.py` | Testy automatyczne |
+
+## Uruchomienie
+
+W folderze projektu utwórz środowisko:
 
 ```bash
 python -m venv venv
@@ -31,34 +42,45 @@ Aktywuj je w PowerShellu:
 .\venv\Scripts\Activate.ps1
 ```
 
-Lub w Linux / macOS (do utworzenia środowiska użyj `python3`):
+W Linux/macOS użyj `python3` do utworzenia środowiska, a następnie:
 
 ```bash
 source venv/bin/activate
 ```
 
-Zainstaluj biblioteki i uruchom program:
+Zainstaluj zależności i uruchom program:
 
 ```bash
-python -m pip install requests dnspython beautifulsoup4
+python -m pip install -r requirements.txt
 python main.py
 ```
 
-Podaj domenę, np. `example.com`, albo pełny adres strony. Klucze API nie są potrzebne.
+Możesz również podać adres i opcje bezpośrednio:
+
+```bash
+python main.py example.com --verbose
+python main.py example.com --json raport.json
+python main.py example.com --skip-vat
+```
+
+Plik JSON musi mieć nieużywaną nazwę — program nie nadpisuje istniejącego pliku. Analiza wymaga dostępu do internetu; klucze API nie są potrzebne.
+
+## Testy
+
+```bash
+python -m unittest discover -p test_main.py
+```
+
+Testy obejmują m.in. walidację adresów i NIP-ów, odczyt danych firm, wybór podstron oraz obsługę błędów. Korzystają z przygotowanych danych i symulowanych odpowiedzi sieciowych, więc nie zastępują sprawdzania działania na rzeczywistych stronach.
 
 ## Ograniczenia
 
-- Brak danych lub błąd pobierania nie oznacza zagrożenia. Program nie wykonuje JavaScript i może pominąć część treści.
-- Znaleziony link nie potwierdza poprawności dokumentu, a poprawna suma kontrolna NIP-u nie potwierdza tożsamości firmy.
-- Wiek domeny, ważny TLS i obecność rekordów DNS nie gwarantują uczciwości sklepu.
-- Analiza obejmuje ograniczoną liczbę podstron i korzysta z dopasowań tekstowych, więc może pomijać informacje lub błędnie je rozpoznawać.
-- Prototyp jest przeznaczony do lokalnego użycia. Przed udostępnieniem publicznego formularza URL wymaga ochrony przed SSRF i limitów pobierania danych.
+- Program nie ocenia uczciwości sklepu. Wiek domeny, ważny TLS i poprawne dane firmy nie stanowią takiego potwierdzenia.
+- Analiza obejmuje stronę startową i maksymalnie cztery dodatkowe, unikalne strony. Nie wykonuje JavaScript; blokady dostępu i dopasowania tekstowe mogą ograniczać wyniki.
+- Brak danych nie oznacza zagrożenia. Wykrycie linku nie potwierdza poprawności dokumentu, a obecność SPF/DMARC nie oznacza pełnej walidacji polityki pocztowej.
+- Rola firmy jest deklaracją odczytaną ze strony. Dane z wykazu VAT nie potwierdzają jej związku z domeną. Zapytania do rejestru podlegają limitom.
+- Prototyp jest przeznaczony do lokalnego użycia. Sprawdza publiczne adresy IP i ogranicza pobieranie, ale przed publicznym wdrożeniem wymaga dodatkowej izolacji sieciowej, limitów ruchu i twardych limitów czasu zadań.
 
-## Plan rozwoju
+## Następny etap
 
-- Ujednolicić format wyników kontroli i obsługę błędów.
-- Dodać testy automatyczne parserów i walidacji.
-- Sprawdzać znalezione dane firmy w zewnętrznych rejestrach.
-- Opracować ocenę ryzyka z uzasadnieniem i rozróżnieniem braku danych od ostrzeżeń.
-- Zbudować backend i interfejs strony z formularzem adresu sklepu oraz raportem.
-- Wdrożyć serwis po dodaniu ochrony przed SSRF i limitów zapytań.
+Lokalna wersja przeglądarkowa: formularz adresu sklepu, czytelny raport ze źródłami oraz obsługa oczekiwania i błędów. Publiczne wdrożenie nastąpi po przygotowaniu zabezpieczeń serwera.
