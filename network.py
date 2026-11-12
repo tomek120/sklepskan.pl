@@ -24,7 +24,7 @@ MAX_REDIRECTS = 5
 OPERATION_SECONDS = 10
 
 
-USER_AGENT = "SklepRadar/0.2 (local research prototype)"
+USER_AGENT = "SklepSkan/0.2 (local research prototype)"
 
 
 EXTRACT_DOMAIN = tldextract.TLDExtract(suffix_list_urls=(), cache_dir=None)

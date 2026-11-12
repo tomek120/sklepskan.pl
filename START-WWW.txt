@@ -1,0 +1,23 @@
+LOKALNA STRONA SKLEPSKAN
+
+1. Wypakuj wszystkie pliki z paczki do folderu projektu obok scanner.py.
+   Zachowaj foldery templates oraz static.
+2. W terminalu, w aktywnym venv:
+   python -m pip install -r requirements-web.txt
+3. Uruchom:
+   python app.py
+4. Otwórz w przeglądarce: http://127.0.0.1:5000
+5. Zostaw terminal otwarty. Zatrzymanie serwera: Ctrl+C.
+
+Testy wszystkich modułów:
+python -m unittest discover -p "test_*.py" -v
+
+Paczka zawiera tylko nowe pliki WWW. Korzysta z istniejących scanner.py,
+network.py, company.py i requirements.txt. Nie podmieniaj tych modułów.
+Po restarcie serwera odśwież stronę. Aplikacja wykonuje jedną analizę naraz.
+Zamknięcie karty nie anuluje analizy. Limity czasu skanera nie są twardym
+limitem czasu zadania.
+
+To lokalny serwer rozwojowy, nie konfiguracja do publicznego wdrożenia.
+Przed Azure trzeba przygotować produkcyjny serwer, trwałą konfigurację,
+limity i izolację sieciową. Nie zmieniaj hosta na 0.0.0.0.

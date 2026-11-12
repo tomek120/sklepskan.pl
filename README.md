@@ -1,10 +1,10 @@
-# SklepRadar
+# SklepSkan — sklepskan.pl
 
 Projekt strony internetowej pomagającej sprawdzać sklepy online na podstawie publicznych informacji (OSINT). Docelowo użytkownik poda adres sklepu i otrzyma raport z wynikami, źródłami oraz wyjaśnieniami.
 
 Projekt rozwijany jako portfolio z zakresu Pythona i cyberbezpieczeństwa.
 
-**Obecny etap:** działający prototyp w terminalu. Mechanizm analizy zwraca uporządkowany raport niezależnie od sposobu wyświetlania. Interfejs internetowy jest kolejnym etapem.
+**Obecny etap:** lokalna aplikacja przeglądarkowa we Flask oraz interfejs konsolowy. Mechanizm analizy zwraca uporządkowany raport niezależnie od sposobu wyświetlania. Publiczne wdrożenie jest planowane.
 
 ## Funkcje
 
@@ -65,10 +65,19 @@ python main.py example.com --skip-vat
 
 Plik JSON musi mieć nieużywaną nazwę — program nie nadpisuje istniejącego pliku. Analiza wymaga dostępu do internetu; klucze API nie są potrzebne.
 
+## Lokalna strona WWW
+
+```bash
+python -m pip install -r requirements-web.txt
+python app.py
+```
+
+Otwórz `http://127.0.0.1:5000`. Zostaw terminal otwarty; serwer zatrzymasz przez Ctrl+C.
+
 ## Testy
 
 ```bash
-python -m unittest discover -p test_main.py
+python -m unittest discover -p "test_*.py"
 ```
 
 Testy obejmują m.in. walidację adresów i NIP-ów, odczyt danych firm, wybór podstron oraz obsługę błędów. Korzystają z przygotowanych danych i symulowanych odpowiedzi sieciowych, więc nie zastępują sprawdzania działania na rzeczywistych stronach.
@@ -83,4 +92,4 @@ Testy obejmują m.in. walidację adresów i NIP-ów, odczyt danych firm, wybór 
 
 ## Następny etap
 
-Lokalna wersja przeglądarkowa: formularz adresu sklepu, czytelny raport ze źródłami oraz obsługa oczekiwania i błędów. Publiczne wdrożenie nastąpi po przygotowaniu zabezpieczeń serwera.
+Testy lokalnej wersji przeglądarkowej, a następnie przygotowanie serwera i zabezpieczeń przed publicznym wdrożeniem.

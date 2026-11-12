@@ -112,7 +112,7 @@ def print_report(report, verbose=False):
               "dns_not_found": "nazwa nie istnieje w DNS", "skipped": "pominięto",
               "rate_limited": "limit API", "invalid_response": "błędna odpowiedź API",
               "invalid": "niepoprawny numer", "timeout": "przekroczono czas"}
-    say("SklepRadar |", report["final_url"])
+    say("SklepSkan |", report["final_url"])
     if report["input_url"] != report["final_url"]:
         say("Przekierowano z:", report["input_url"])
 
@@ -185,7 +185,7 @@ def print_report(report, verbose=False):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="SklepRadar: lokalna analiza publicznych informacji o sklepie.")
+    parser = argparse.ArgumentParser(description="SklepSkan: lokalna analiza publicznych informacji o sklepie.")
     parser.add_argument("url", nargs="?", help="Domena lub URL")
     parser.add_argument("--json", dest="json_path", help="Zapis raportu jako JSON")
     parser.add_argument("--skip-vat", action="store_true", help="Bez zapytań do wykazu VAT")

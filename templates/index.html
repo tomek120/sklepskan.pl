@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="pl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="csrf-token" content="{{ token }}"><title>SklepSkan — sprawdź informacje o sklepie</title><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"><script src="{{ url_for('static', filename='app.js') }}" defer></script></head>
+<body>
+<header><a class="brand" href="/">◉ SklepSkan<span>PUBLICZNE DANE. JASNE ŹRÓDŁA.</span></a><span class="badge">Wersja lokalna · 0.1</span></header>
+<main>
+<section class="intro"><p class="eyebrow">ZANIM KLIKNIESZ „KUPUJĘ”</p><h1>Poznaj sklep.<br><span>Sprawdź jego dane.</span></h1><p class="lead">Zobacz informacje o domenie, połączeniu i firmach wymienionych na stronie. Wszystko w jednym raporcie, ze źródłami.</p></section>
+<section class="search-panel" aria-label="Sprawdzanie sklepu"><form id="scan-form"><label for="address">Adres sklepu</label><div class="input-row"><input id="address" name="address" type="text" maxlength="2048" placeholder="np. mtuning.pl" required autocomplete="url" spellcheck="false"><button id="submit" type="submit">Sprawdź sklep <span aria-hidden="true">→</span></button></div><p class="hint">Wpisz domenę lub pełny adres. Analiza może potrwać kilka minut.</p></form><p id="progress" role="status" hidden>Trwa sprawdzanie domeny, strony i danych firm…</p><p id="error" role="alert" hidden></p></section>
+<p class="notice">Raport zbiera informacje — nie potwierdza uczciwości sklepu. Brak danych nie oznacza zagrożenia.</p>
+<div id="result" tabindex="-1"></div>
+<section id="empty" class="steps"><article><span>01 / DOMENA</span><h2>Historia i połączenie</h2><p>Wiek domeny, certyfikat TLS i rekordy pocztowe.</p></article><article><span>02 / FIRMA</span><h2>Kto pojawia się na stronie?</h2><p>NIP-y, dane z wykazu VAT i deklarowane role firm.</p></article><article><span>03 / ŹRÓDŁA</span><h2>Sprawdź podstawę wyniku</h2><p>Adresy podstron, kontekst i ograniczenia analizy.</p></article></section>
+</main><footer>sklepskan.pl / projekt OSINT <span>Dane wymagają interpretacji, nie tylko odczytania.</span></footer>
+</body></html>
