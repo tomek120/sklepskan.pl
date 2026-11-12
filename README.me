@@ -1,0 +1,50 @@
+SklepRadar
+Projekt strony internetowej pomagającej sprawdzać sklepy online na podstawie publicznych informacji (OSINT). Docelowo użytkownik poda adres sklepu i otrzyma raport z wynikami, źródłami oraz wyjaśnieniami.
+
+Projekt rozwijany jako portfolio z zakresu Pythona i cyberbezpieczeństwa.
+
+Obecny etap: działający prototyp w terminalu. Mechanizm analizy zwraca uporządkowany raport niezależnie od sposobu wyświetlania. Interfejs internetowy jest kolejnym etapem.
+Funkcje
+- Odczyt wieku domeny z RDAP i weryfikacja certyfikatu TLS.
+- Wykrywanie rekordów pocztowych MX, SPF i DMARC.
+- Wyszukiwanie linków do informacji o sklepie i wybór podstron do analizy.
+- Wykrywanie wielu polskich NIP-ów, kontrola ich sumy kontrolnej i sprawdzanie danych firm w wykazie VAT Ministerstwa Finansów.
+- Rozpoznawanie deklarowanej roli firmy, np. sprzedawcy lub operatora płatności, na podstawie kontekstu.
+- Wykrywanie niemieckich numerów VAT ID — bez weryfikacji rejestrowej.
+- Raport ze źródłami, tryb szczegółowy i zapis do JSON.
+Technologie: Python 3.10+, BeautifulSoup, dnspython, tldextract, certifi. Zależności znajdują się w requirements.txt.
+Struktura projektu
+Plik	Zadanie
+main.py	Obsługa konsoli i wyświetlanie wyników
+scanner.py	Wybór podstron, koordynacja analizy i raport
+network.py	Połączenia HTTP, TLS, DNS i RDAP
+company.py	Wykrywanie identyfikatorów, dane VAT i role firm
+test_main.py	Testy automatyczne
+
+
+Uruchomienie
+W folderze projektu utwórz środowisko:
+python -m venv venv
+Aktywuj je w PowerShellu:
+.\venv\Scripts\Activate.ps1
+W Linux/macOS użyj python3 do utworzenia środowiska, a następnie:
+source venv/bin/activate
+Zainstaluj zależności i uruchom program:
+python -m pip install -r requirements.txt
+python main.py
+Możesz również podać adres i opcje bezpośrednio:
+python main.py example.com --verbose
+python main.py example.com --json raport.json
+python main.py example.com --skip-vat
+Plik JSON musi mieć nieużywaną nazwę — program nie nadpisuje istniejącego pliku. Analiza wymaga dostępu do internetu; klucze API nie są potrzebne.
+Testy
+python -m unittest discover -p test_main.py
+Testy obejmują m.in. walidację adresów i NIP-ów, odczyt danych firm, wybór podstron oraz obsługę błędów. Korzystają z przygotowanych danych i symulowanych odpowiedzi sieciowych, więc nie zastępują sprawdzania działania na rzeczywistych stronach.
+Ograniczenia
+- Program nie ocenia uczciwości sklepu. Wiek domeny, ważny TLS i poprawne dane firmy nie stanowią takiego potwierdzenia.
+- Analiza obejmuje stronę startową i maksymalnie cztery dodatkowe, unikalne strony. Nie wykonuje JavaScript; blokady dostępu i dopasowania tekstowe mogą ograniczać wyniki.
+- Brak danych nie oznacza zagrożenia. Wykrycie linku nie potwierdza poprawności dokumentu, a obecność SPF/DMARC nie oznacza pełnej walidacji polityki pocztowej.
+- Rola firmy jest deklaracją odczytaną ze strony. Dane z wykazu VAT nie potwierdzają jej związku z domeną. Zapytania do rejestru podlegają limitom.
+- Prototyp jest przeznaczony do lokalnego użycia. Sprawdza publiczne adresy IP i ogranicza pobieranie, ale przed publicznym wdrożeniem wymaga dodatkowej izolacji sieciowej, limitów ruchu i twardych limitów czasu zadań.
+Następny etap
+Lokalna wersja przeglądarkowa: formularz adresu sklepu, czytelny raport ze źródłami oraz obsługa oczekiwania i błędów. Publiczne wdrożenie nastąpi po przygotowaniu zabezpieczeń serwera.
